@@ -1,0 +1,49 @@
+---
+globs: *.ts,*.tsx
+description: Component refactoring pattern for modular architecture
+---
+
+# Component Refactoring Pattern
+
+When refactoring large components into smaller, modular files, follow this structure:
+
+## Directory Structure
+```
+ComponentName/
+├── ComponentName.tsx          # Main component
+├── ComponentNameHeader.tsx    # Header/actions component
+├── ComponentNameTable.tsx     # Table/list component
+├── ComponentNameModal.tsx     # Modal/overlay component
+├── hooks.ts                   # Custom React hooks
+├── utils.ts                   # Utility functions
+├── types.ts                   # TypeScript interfaces
+└── index.ts                   # Barrel exports
+```
+
+## Main Component File
+**IMPORTANT**: When refactoring existing files, delete the old file completely and create a new one with clean re-exports:
+```typescript
+/**
+ * ComponentName - re-export from modular structure
+ */
+export { ComponentName } from "./ComponentName/ComponentName";
+```
+
+For API routes, use direct handler exports:
+```typescript
+/**
+ * API Route - re-export from modular structure
+ */
+export { handleGet as GET, handlePost as POST, handlePut as PUT } from "./handlers";
+```
+
+## Key Principles
+- **Focused Concerns**: Each file handles one specific concern
+- **Barrel Exports**: Use `index.ts` for clean imports
+- **Type Safety**: Centralize all types in `types.ts`
+- **Custom Hooks**: Extract complex state logic into `hooks.ts`
+- **Utility Functions**: Move pure functions to `utils.ts`
+- **Consistent Naming**: Use descriptive, consistent file names
+
+## Example Pattern
+See [TireCard.tsx](mdc:components/TireCard.tsx) and [BrandSizeEditor.tsx](mdc:components/admin/BrandSizeEditor.tsx) for reference implementations.

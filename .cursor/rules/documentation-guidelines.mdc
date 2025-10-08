@@ -1,0 +1,23 @@
+---
+description: Documentation
+alwaysApply: false
+---
+
+# Minimal Documentation Before Implementation
+
+Produce lightweight documentation artifacts before writing any code. Capture the intent and scope in the `0-docs/` tree so the team can review and iterate quickly.
+
+## Folder Structure Rules
+- Store every planning note inside `0-docs/` at the repository root
+- Create a subfolder per task using the format `0-docs/<task-name>/`
+- When a task has distinct workstreams, add nested subfolders (e.g. `0-docs/<task-name>/ui/`)
+
+## Documentation Format
+- Use concise markdown files named sequentially (`001-context.md`, `002-decisions.md`, ...)
+- Keep each file focused on a single topic; split content rather than growing one file
+- Limit docs to actionable bullet points, diagrams, or links—no long prose
+
+## Workflow Expectations
+- Draft the initial doc before implementation; circulate it for feedback
+- Update or append new numbered files as the task evolves—never overwrite history
+- Block coding until the minimal doc set for the task is present and approved

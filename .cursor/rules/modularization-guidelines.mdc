@@ -1,0 +1,23 @@
+---
+description: Small File and Modularization
+alwaysApply: false
+---
+
+# File Organization and Modularization
+
+All new code must stay lightweight and modular. Break work into focused units before committing.
+
+## File Size Guardrails
+- Keep source files under 200 logical lines; split earlier when scope grows
+- Create separate modules for unrelated concerns instead of piling code into one file
+- Reject pull requests introducing "god" files or multipurpose classes
+
+## Modularization Practices
+- Group functionality into cohesive units with clear, single-purpose APIs
+- Share code through small libraries or utilities instead of monolithic helpers
+- Prefer composition of small pieces over inheritance or deep hierarchies
+
+## Review Checklist
+- Did I split out new features into dedicated modules?
+- Can any file be broken down further without harming clarity?
+- Are interfaces scoped to just what each consumer needs?

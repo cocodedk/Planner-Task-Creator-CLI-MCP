@@ -1,0 +1,37 @@
+---
+description: Engineering Methodology
+alwaysApply: false
+---
+
+# Engineering Methodology Guardrails
+
+Follow every guideline in this document before merging or shipping any change. These rules exist to keep the codebase maintainable and to enforce disciplined decision making.
+
+## Core Principles
+
+### DRY (Don't Repeat Yourself)
+- Extract shared logic into reusable units before duplication spreads
+- Prefer composition or shared helpers over copy-paste updates
+- Flag repeated configuration or literals and centralize them quickly
+
+### KISS (Keep It Simple, Stupid)
+- Ship the simplest implementation that satisfies current requirements
+- Remove accidental complexity; avoid cleverness that obscures intent
+- Write tests and documentation that match the simplicity of the code
+
+### TAGNI (They Aren't Gonna Need It)
+- Do not add features, flags, or abstractions until a validated need appears
+- Keep interfaces narrow; expose only what existing consumers require
+- Reject speculative configuration toggles without a committed use case
+
+### MVP (Minimum Viable Product)
+- Define the smallest coherent slice that delivers measurable value
+- Defer polish work until the MVP earns validation from real users
+- Instrument feedback loops so MVP learnings drive the next iteration
+
+## SOLID Principles
+- **Single Responsibility**: each module does one job and owns one reason to change
+- **Open/Closed**: extend behavior through composition or inheritance, not edits to stable code
+- **Liskov Substitution**: ensure replacements preserve expected behavior contracts
+- **Interface Segregation**: tailor interfaces so clients depend only on what they use
+- **Dependency Inversion**: depend on abstractions, inject concrete collaborators
