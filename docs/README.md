@@ -34,4 +34,3 @@ The `0-docs/` directory contains detailed implementation specifications:
 ## 🔧 Scripts
 
 All shell scripts are located in the `../scripts/` directory. See the scripts README for details.
-

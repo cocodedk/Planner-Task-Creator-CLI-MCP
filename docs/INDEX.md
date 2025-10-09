@@ -36,7 +36,7 @@ Start here if you're new to the project:
 
 ```bash
 # Quick install
-./INSTALLATION.sh
+./scripts/INSTALLATION.sh
 
 # Or manual install
 pip install -r requirements.txt
@@ -86,8 +86,8 @@ planner-task-creator-cli-mcp/
 ├── planner.py              # Main Python CLI
 ├── requirements.txt        # Python dependencies
 ├── package.json           # Node.js dependencies
-├── INSTALLATION.sh        # Automated installer
-│
+├── scripts/               # Shell scripts
+│   └── INSTALLATION.sh    # Automated installer
 ├── src/
 │   └── server.ts         # MCP server
 │
