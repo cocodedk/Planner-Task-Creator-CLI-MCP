@@ -10,7 +10,7 @@ import os
 # Add parent directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from planner import (
+from planner_lib.resolution import (
     case_insensitive_match,
     resolve_plan,
     resolve_bucket,
@@ -44,7 +44,7 @@ def test_resolve_plan_by_id(mocker, mock_token):
 
 def test_resolve_plan_by_name(mocker, mock_token, mock_plans):
     """Test resolving plan by name"""
-    mocker.patch("planner.list_user_plans", return_value=mock_plans)
+    mocker.patch("planner_lib.resolution_plans.list_user_plans", return_value=mock_plans)
 
     result = resolve_plan(mock_token, "My Plan")
 
@@ -54,7 +54,7 @@ def test_resolve_plan_by_name(mocker, mock_token, mock_plans):
 
 def test_resolve_plan_case_insensitive(mocker, mock_token, mock_plans):
     """Test case-insensitive plan resolution"""
-    mocker.patch("planner.list_user_plans", return_value=mock_plans)
+    mocker.patch("planner_lib.resolution_plans.list_user_plans", return_value=mock_plans)
 
     result = resolve_plan(mock_token, "my plan")
 
@@ -63,7 +63,7 @@ def test_resolve_plan_case_insensitive(mocker, mock_token, mock_plans):
 
 def test_resolve_plan_not_found(mocker, mock_token, mock_plans):
     """Test plan not found error"""
-    mocker.patch("planner.list_user_plans", return_value=mock_plans)
+    mocker.patch("planner_lib.resolution_plans.list_user_plans", return_value=mock_plans)
 
     with pytest.raises(ValueError) as exc_info:
         resolve_plan(mock_token, "Nonexistent Plan")
@@ -80,7 +80,7 @@ def test_resolve_plan_ambiguous(mocker, mock_token):
         {"id": "plan-id-1", "title": "My Plan", "groupName": "Team A"},
         {"id": "plan-id-2", "title": "My Plan", "groupName": "Team B"}
     ]
-    mocker.patch("planner.list_user_plans", return_value=duplicate_plans)
+    mocker.patch("planner_lib.resolution_plans.list_user_plans", return_value=duplicate_plans)
 
     with pytest.raises(ValueError) as exc_info:
         resolve_plan(mock_token, "My Plan")
@@ -101,7 +101,7 @@ def test_resolve_bucket_by_id(mocker, mock_token):
 
 def test_resolve_bucket_by_name(mocker, mock_token, mock_buckets):
     """Test resolving bucket by name"""
-    mocker.patch("planner.list_plan_buckets", return_value=mock_buckets)
+    mocker.patch("planner_lib.resolution_buckets.list_plan_buckets", return_value=mock_buckets)
 
     result = resolve_bucket(mock_token, "plan-id-1", "To Do")
 
@@ -111,7 +111,7 @@ def test_resolve_bucket_by_name(mocker, mock_token, mock_buckets):
 
 def test_resolve_bucket_not_found(mocker, mock_token, mock_buckets):
     """Test bucket not found error"""
-    mocker.patch("planner.list_plan_buckets", return_value=mock_buckets)
+    mocker.patch("planner_lib.resolution_buckets.list_plan_buckets", return_value=mock_buckets)
 
     with pytest.raises(ValueError) as exc_info:
         resolve_bucket(mock_token, "plan-id-1", "Nonexistent Bucket")

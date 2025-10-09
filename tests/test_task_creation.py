@@ -9,7 +9,7 @@ import os
 # Add parent directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from planner import parse_labels, create_task
+from planner_lib.task_creation import parse_labels, create_task
 
 
 def test_parse_labels_empty():
