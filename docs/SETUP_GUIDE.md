@@ -34,10 +34,17 @@ After registration, note these values:
 4. Add these permissions:
    - `Tasks.ReadWrite` - Read and write user and shared tasks
    - `Group.ReadWrite.All` - Read and write all groups (requires admin consent)
+   - `User.Read.All` - Read all users' full profiles (requires admin consent)
+   - `User.ReadBasic.All` - Read all users' basic profiles (optional)
 5. Click **Add permissions**
 6. Click **Grant admin consent** (if you have admin rights)
 
-**Note:** `Group.ReadWrite.All` requires admin consent. If you don't have admin rights, you can still use the tool with just `Tasks.ReadWrite` permission for basic functionality.
+**Important Notes:**
+- `Group.ReadWrite.All` requires admin consent for accessing plans and buckets
+- `User.Read.All` or `User.ReadBasic.All` is **required for task assignment by email**
+- Without `User.Read.All`, you can only assign tasks using User IDs (GUIDs)
+- Admin consent is required for `User.Read.All` - without it, user lookups will fail
+- You can still use the tool with just `Tasks.ReadWrite` for basic task creation (without assignments)
 
 ### 1.4 Configure Authentication
 

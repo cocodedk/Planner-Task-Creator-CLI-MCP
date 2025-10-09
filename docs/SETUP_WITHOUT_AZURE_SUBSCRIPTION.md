@@ -84,11 +84,17 @@ Now follow the standard setup:
 1. Go to **API permissions** in your app
 2. Click **Add a permission** → **Microsoft Graph** → **Delegated permissions**
 3. Add:
-   - `Tasks.ReadWrite`
-   - `Group.ReadWrite.All`
+   - `Tasks.ReadWrite` - Read and write tasks
+   - `Group.ReadWrite.All` - Access plans and buckets (requires admin consent)
+   - `User.Read.All` - Read all users' profiles (required for task assignment by email)
+   - `User.ReadBasic.All` - Read users' basic profiles (optional)
 4. Click **Grant admin consent** (you're the admin!)
 
-**Note:** The `offline_access` scope is automatically included by MSAL and doesn't need to be added explicitly.
+**Important Notes:**
+- `User.Read.All` is **required for assigning tasks by email address**
+- Without this permission, user lookups will fail and assignments won't work
+- Admin consent is required for both `Group.ReadWrite.All` and `User.Read.All`
+- The `offline_access` scope is automatically included by MSAL and doesn't need to be added explicitly
 
 ### Step 6: Enable Public Client Flow
 
@@ -245,9 +251,11 @@ On Overview page:
 → Add a permission
 → Microsoft Graph
 → Delegated permissions
-→ Add: Tasks.ReadWrite, Group.ReadWrite.All
+→ Add: Tasks.ReadWrite, Group.ReadWrite.All, User.Read.All
 → Grant admin consent for [your tenant]
 ```
+
+**Note:** `User.Read.All` is required for assigning tasks by email address.
 
 **8. Enable Public Client**
 ```
