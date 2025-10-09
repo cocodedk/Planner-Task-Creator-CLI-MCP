@@ -118,15 +118,19 @@ python3 planner.py complete-subtask-cmd \
   --plan FITS
 ```
 
-## Task Already Created
+## ✅ Test Task Created and Verified
 
-A test task has been created:
+A test task has been created with 2 subtasks:
 - **Task ID:** `lDTneZMnIE2mUStuz_hxjZgAPqYz`
 - **Plan:** FITS
 - **Bucket:** To do
 - **Title:** "Test Subtask Fix - Verify 400 Error Resolution"
 
-You can use this task ID to test adding subtasks.
+**Subtasks Added Successfully:**
+1. ✅ "First subtask - Verify API works" (ID: `df0ad5b4-1604-4dd9-9c4c-211001d3dcb9`)
+2. ✅ "Second subtask - Confirm no 400 error" (ID: `45c979f1-0f75-49c0-a3b8-92fa23cba26e`)
+
+Both subtasks are visible in Microsoft Planner and working correctly!
 
 ## Expected Behavior
 
