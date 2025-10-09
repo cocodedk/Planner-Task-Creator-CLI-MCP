@@ -4,7 +4,7 @@
 
 ### Environment Variables
 
-The tests use environment variables to avoid hardcoding sensitive Azure AD User IDs. 
+The tests use environment variables to avoid hardcoding sensitive Azure AD User IDs.
 
 **Setup:**
 
@@ -56,4 +56,3 @@ These functions ensure tests work even without a `.env` file (using placeholder 
 - Use the helper functions from `test_helpers.py` for all user ID references
 - The `.env` file is gitignored and should remain local only
 - The `.env.example` file shows the structure but uses placeholder values
-
