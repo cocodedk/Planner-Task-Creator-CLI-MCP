@@ -366,6 +366,42 @@ All errors are returned as structured JSON:
 2. Check that `PLANNER_CLI_PATH` points to correct location
 3. Verify environment variables are set in MCP config
 
+## Project Structure
+
+```
+planner-task-creator-cli-mcp/
+├── planner.py              # Main CLI entry point
+├── planner_lib/            # Modular Python library (25 files)
+│   ├── auth.py            # Authentication
+│   ├── config.py          # Configuration
+│   ├── graph_client.py    # Graph API client
+│   ├── resolution*.py     # Plan/bucket resolution
+│   ├── task_*.py          # Task operations
+│   └── cli_*.py           # CLI commands
+├── src/                   # TypeScript MCP server
+│   ├── server.ts          # Main entry point
+│   └── server/            # Modular server (7 files)
+├── tests/                 # Test suite (68 tests)
+│   ├── test_*.py          # Unit tests
+│   └── test_task_*/       # Modular test suites
+├── docs/                  # Documentation
+│   ├── README.md          # Documentation index
+│   ├── QUICKSTART.md      # Quick start guide
+│   ├── SETUP_GUIDE.md     # Complete setup
+│   └── *.md               # Other guides
+├── scripts/               # Shell scripts
+│   ├── INSTALLATION.sh    # Automated installer
+│   ├── setup-cursor-mcp.sh # Cursor setup
+│   └── test-*.sh          # Test scripts
+├── 0-docs/                # Implementation specs
+│   ├── implementation steps/ # Detailed specs
+│   ├── prd.md            # Product requirements
+│   └── ROADMAP.md        # Project roadmap
+├── package.json           # Node.js dependencies
+├── requirements.txt       # Python dependencies
+└── README.md              # This file
+```
+
 ## Contributing
 
 Contributions are welcome! Please:

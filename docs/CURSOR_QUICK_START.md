@@ -113,7 +113,7 @@ Your MCP server is configured with:
 3. **Test the MCP server:**
    ```bash
    cd /absolute/path/to/your/project
-   ./test-mcp-server.sh
+   ./scripts/test-mcp-server.sh
    ```
 
 4. **Verify configuration:**
@@ -195,7 +195,7 @@ If you need to change settings:
 Or run the setup script again:
 ```bash
 cd /absolute/path/to/your/project
-./setup-cursor-mcp.sh
+./scripts/setup-cursor-mcp.sh
 ```
 
 ## 📚 More Information

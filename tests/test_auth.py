@@ -11,7 +11,7 @@ import os
 # Add parent directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from planner import get_tokens, get_cache_path
+from planner_lib.auth import get_tokens, get_cache_path
 
 
 def test_get_tokens_device_flow(mocker, mock_msal_app, tmp_path):
@@ -22,7 +22,7 @@ def test_get_tokens_device_flow(mocker, mock_msal_app, tmp_path):
     mocker.patch("os.chmod")
 
     # Mock cache path
-    mocker.patch("planner.get_cache_path", return_value=tmp_path / "cache.bin")
+    mocker.patch("planner_lib.auth.get_cache_path", return_value=tmp_path / "cache.bin")
 
     # Call get_tokens
     token = get_tokens("test-tenant", "test-client")
@@ -50,7 +50,7 @@ def test_get_tokens_from_cache(mocker, mock_msal_app, tmp_path):
     # Mock file operations
     mocker.patch("pathlib.Path.exists", return_value=True)
     mock_file = mocker.patch("builtins.open", mock_open(read_data="cached_data"))
-    mocker.patch("planner.get_cache_path", return_value=tmp_path / "cache.bin")
+    mocker.patch("planner_lib.auth.get_cache_path", return_value=tmp_path / "cache.bin")
 
     # Call get_tokens
     token = get_tokens("test-tenant", "test-client")
@@ -78,7 +78,7 @@ def test_get_tokens_auth_failure(mocker, mock_msal_app, tmp_path):
 
     # Mock file operations
     mocker.patch("pathlib.Path.exists", return_value=False)
-    mocker.patch("planner.get_cache_path", return_value=tmp_path / "cache.bin")
+    mocker.patch("planner_lib.auth.get_cache_path", return_value=tmp_path / "cache.bin")
     mock_file = mocker.patch("builtins.open", mock_open())
 
     with pytest.raises(RuntimeError, match="Authentication failed"):

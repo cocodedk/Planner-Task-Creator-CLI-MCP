@@ -196,7 +196,7 @@ Update the server to use full path to venv python. I'll create a wrapper script 
 
 ## Quick Setup Script
 
-Save this as `setup-cursor-mcp.sh`:
+The `scripts/setup-cursor-mcp.sh` script:
 
 ```bash
 #!/bin/bash
@@ -246,8 +246,8 @@ cat "$CONFIG_FILE"
 
 Run it:
 ```bash
-chmod +x setup-cursor-mcp.sh
-./setup-cursor-mcp.sh
+chmod +x scripts/setup-cursor-mcp.sh
+./scripts/setup-cursor-mcp.sh
 ```
 
 ## Testing Without Cursor

@@ -6,6 +6,7 @@
 
 ## Implementation Sequence
 
+### v1.0 - Task Creation (Complete)
 1. **001-authentication**: Core OAuth device code flow with MSAL
 2. **002-graph-client**: HTTP client for Microsoft Graph API
 3. **003-configuration**: Config file management and defaults resolution
@@ -15,6 +16,12 @@
 7. **007-error-handling**: Structured error responses
 8. **008-mcp-server**: Node.js MCP server wrapping CLI
 9. **009-testing**: Basic test suite for all modules
+
+### v2.0 - Task Management (Planned)
+10. **010-task-management**: Task lifecycle operations
+    - List/find tasks
+    - Complete/move/delete tasks
+    - Subtask (checklist) management
 
 ## Module Dependencies
 
