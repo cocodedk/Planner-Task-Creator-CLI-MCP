@@ -51,6 +51,7 @@ export async function handleCreateTask(args: {
   desc?: string;
   due?: string;
   labels?: string;
+  assignee?: string;
 }): Promise<any> {
   const cliArgs = ["add", "--title", args.title];
 
@@ -68,6 +69,9 @@ export async function handleCreateTask(args: {
   }
   if (args.labels) {
     cliArgs.push("--labels", args.labels);
+  }
+  if (args.assignee) {
+    cliArgs.push("--assignee", args.assignee);
   }
 
   const result = await runCli(cliArgs);

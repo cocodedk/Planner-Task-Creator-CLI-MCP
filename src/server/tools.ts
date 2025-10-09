@@ -17,7 +17,7 @@ export const TOOLS: Tool[] = [
   },
   {
     name: "planner_createTask",
-    description: "Create a new task in Microsoft Planner with title, plan, bucket, description, due date, and labels.",
+    description: "Create a new task in Microsoft Planner with title, plan, bucket, description, due date, labels, and assignee.",
     inputSchema: {
       type: "object",
       properties: {
@@ -44,6 +44,10 @@ export const TOOLS: Tool[] = [
         labels: {
           type: "string",
           description: "Comma-separated labels like 'Label1,Label3' (optional)",
+        },
+        assignee: {
+          type: "string",
+          description: "Comma-separated user emails or User IDs (e.g., user1@example.com,user2@example.com) (optional)",
         },
       },
       required: ["title"],

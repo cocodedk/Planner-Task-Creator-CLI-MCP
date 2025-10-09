@@ -9,7 +9,8 @@ import os
 # Add parent directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from planner_lib.task_creation import parse_labels, create_task
+from planner_lib.task_creation import parse_labels, build_assignments, create_task
+from .test_helpers import get_test_user_id_1, get_test_user_id_2
 
 
 def test_parse_labels_empty():
@@ -161,3 +162,99 @@ def test_create_task_all_fields(mocker, mock_token, mock_requests, mock_task):
     assert payload["title"] == "Complete Task"
     assert payload["dueDateTime"] == "2024-12-31T17:00:00Z"
     assert payload["appliedCategories"] == {"category1": True, "category2": True}
+
+
+def test_build_assignments_empty():
+    """Test building assignments with empty list"""
+    result = build_assignments([])
+    assert result == {}
+
+
+def test_build_assignments_single_user():
+    """Test building assignments with single user"""
+    user_id = get_test_user_id_1()
+    result = build_assignments([user_id])
+
+    assert user_id in result
+    assert result[user_id]["@odata.type"] == "#microsoft.graph.plannerAssignment"
+    assert result[user_id]["orderHint"] == " !"
+
+
+def test_build_assignments_multiple_users():
+    """Test building assignments with multiple users"""
+    user_id1 = get_test_user_id_1()
+    user_id2 = get_test_user_id_2()
+    result = build_assignments([user_id1, user_id2])
+
+    assert len(result) == 2
+    assert user_id1 in result
+    assert user_id2 in result
+    assert result[user_id1]["orderHint"] == " !"
+    assert result[user_id2]["orderHint"] == " !"
+
+
+def test_create_task_with_assignee(mocker, mock_token, mock_requests, mock_task):
+    """Test creating task with assignee"""
+    user_id = get_test_user_id_1()
+
+    # Mock resolve_users
+    mocker.patch('planner_lib.task_creation.resolve_users', return_value=[user_id])
+    mock_requests["response"].json.return_value = mock_task
+
+    result = create_task(
+        token=mock_token,
+        plan_id="plan-id-1",
+        bucket_id="bucket-id-1",
+        title="Test Task",
+        assignee="user@example.com"
+    )
+
+    call_args = mock_requests["post"].call_args
+    payload = call_args[1]["json"]
+
+    assert "assignments" in payload
+    assert user_id in payload["assignments"]
+    assert payload["assignments"][user_id]["@odata.type"] == "#microsoft.graph.plannerAssignment"
+
+
+def test_create_task_with_multiple_assignees(mocker, mock_token, mock_requests, mock_task):
+    """Test creating task with multiple assignees"""
+    user_id1 = get_test_user_id_1()
+    user_id2 = get_test_user_id_2()
+
+    # Mock resolve_users
+    mocker.patch('planner_lib.task_creation.resolve_users', return_value=[user_id1, user_id2])
+    mock_requests["response"].json.return_value = mock_task
+
+    result = create_task(
+        token=mock_token,
+        plan_id="plan-id-1",
+        bucket_id="bucket-id-1",
+        title="Test Task",
+        assignee="user1@example.com,user2@example.com"
+    )
+
+    call_args = mock_requests["post"].call_args
+    payload = call_args[1]["json"]
+
+    assert "assignments" in payload
+    assert len(payload["assignments"]) == 2
+    assert user_id1 in payload["assignments"]
+    assert user_id2 in payload["assignments"]
+
+
+def test_create_task_without_assignee(mocker, mock_token, mock_requests, mock_task):
+    """Test creating task without assignee (backward compatibility)"""
+    mock_requests["response"].json.return_value = mock_task
+
+    result = create_task(
+        token=mock_token,
+        plan_id="plan-id-1",
+        bucket_id="bucket-id-1",
+        title="Test Task"
+    )
+
+    call_args = mock_requests["post"].call_args
+    payload = call_args[1]["json"]
+
+    assert "assignments" not in payload
