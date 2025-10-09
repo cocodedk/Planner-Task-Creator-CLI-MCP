@@ -67,4 +67,3 @@ planner.py user search "John"
 
 - `007-user-search-feature.md` - Comprehensive implementation guide
 - CLI help: `planner.py user --help`
-

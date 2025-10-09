@@ -68,4 +68,3 @@ def resolve_users(token: str, assignee_csv: str) -> List[str]:
         raise create_batch_error(resolved_info, not_found, ambiguous)
 
     return user_ids
-

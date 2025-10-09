@@ -17,4 +17,3 @@ class ResolvedUser(TypedDict):
     """Successfully resolved user"""
     input: str
     userId: str
-

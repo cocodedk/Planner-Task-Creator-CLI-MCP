@@ -111,4 +111,3 @@ $ planner.py add --title "Meeting" --assignee "Iman,John,Chris,invalid@test.com"
 2. Update test expectations for batch error format
 3. Complete integration testing
 4. Document new error format in user guide
-

@@ -74,4 +74,3 @@ def resolve_user(token: str, user_identifier: str, enable_search: bool = True) -
     ]
 
     raise create_ambiguous_user_error(user_identifier, suggestions)
-

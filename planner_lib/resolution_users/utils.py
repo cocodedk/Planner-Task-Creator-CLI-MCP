@@ -97,4 +97,3 @@ def create_batch_error(
     error["hint"] = "Please use full email addresses or User IDs for ambiguous/not-found identifiers"
 
     return ValueError(json.dumps(error))
-
