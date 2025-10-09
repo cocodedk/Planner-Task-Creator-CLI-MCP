@@ -170,7 +170,7 @@ TypeError: Parameter.make_metavar() missing 1 required positional argument: 'ctx
 - Users can still be assigned using their Azure AD User ID (GUID) directly
 - Example: `python planner.py add --title "Test" --assignee "12345678-1234-1234-1234-123456789abc"`
 
-**Status**: 
+**Status**:
 - ✅ Feature implemented and working when permissions are granted
 - ⚠️ Requires admin consent for `User.Read.All` permission
 
