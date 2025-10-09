@@ -228,3 +228,7 @@ def register_all_commands(app: typer.Typer):
     list_plans_cmd(app)
     list_buckets_cmd(app)
     add_task_cmd(app)
+
+    # Register user commands
+    from .cli_user_commands import register_user_commands
+    register_user_commands(app)

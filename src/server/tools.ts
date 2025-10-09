@@ -276,4 +276,36 @@ export const TOOLS: Tool[] = [
       required: ["task"],
     },
   },
+  {
+    name: "planner_searchUsers",
+    description: "Search for users in Azure AD by display name. Supports partial name matching.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        query: {
+          type: "string",
+          description: "Search term (name or partial name, e.g., 'John', 'Iman')",
+        },
+      },
+      required: ["query"],
+    },
+  },
+  {
+    name: "planner_lookupUser",
+    description: "Resolve a user identifier (email, UPN, User ID, or partial name) to full user details.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        user: {
+          type: "string",
+          description: "User email, UPN, User ID, or partial name",
+        },
+        noSearch: {
+          type: "boolean",
+          description: "Disable partial name search fallback (default: false)",
+        },
+      },
+      required: ["user"],
+    },
+  },
 ];

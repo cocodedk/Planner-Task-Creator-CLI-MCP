@@ -16,7 +16,7 @@ if _env_path.exists():
 def get_test_user_id_1() -> str:
     """
     Get test user ID 1 from environment or return placeholder.
-    
+
     Returns:
         Azure AD User GUID for testing
     """
@@ -26,9 +26,8 @@ def get_test_user_id_1() -> str:
 def get_test_user_id_2() -> str:
     """
     Get test user ID 2 from environment or return placeholder.
-    
+
     Returns:
         Azure AD User GUID for testing
     """
     return os.getenv("TEST_USER_ID_2", "00000000-0000-0000-0000-000000000002")
-

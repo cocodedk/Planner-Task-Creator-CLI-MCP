@@ -26,6 +26,11 @@ import {
   handleCompleteSubtask,
 } from "./handlers-subtasks.js";
 
+import {
+  handleSearchUsers,
+  handleLookupUser,
+} from "./handlers-users.js";
+
 /**
  * Handle tool execution by routing to specific handlers
  */
@@ -75,6 +80,13 @@ export async function handleToolCall(name: string, args: any): Promise<any> {
 
     case "planner_completeSubtask":
       return handleCompleteSubtask(args);
+
+    // User tools
+    case "planner_searchUsers":
+      return handleSearchUsers(args);
+
+    case "planner_lookupUser":
+      return handleLookupUser(args);
 
     default:
       throw new Error(`Unknown tool: ${name}`);

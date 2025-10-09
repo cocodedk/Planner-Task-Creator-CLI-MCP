@@ -6,6 +6,12 @@ import json
 import pytest
 from unittest.mock import MagicMock, Mock
 from pathlib import Path
+from .conftest_fixtures import (
+    get_mock_config_data,
+    get_mock_plans_data,
+    get_mock_buckets_data,
+    get_mock_task_data
+)
 
 
 @pytest.fixture
@@ -20,13 +26,7 @@ def mock_config_dir(tmp_path):
 def mock_config_file(mock_config_dir):
     """Create a mock config file"""
     config_file = mock_config_dir / "config.json"
-    config_data = {
-        "tenant_id": "test-tenant-id",
-        "client_id": "test-client-id",
-        "default_plan": "My Plan",
-        "default_bucket": "To Do"
-    }
-    config_file.write_text(json.dumps(config_data))
+    config_file.write_text(json.dumps(get_mock_config_data()))
     return config_file
 
 
@@ -39,54 +39,19 @@ def mock_token():
 @pytest.fixture
 def mock_plans():
     """Return mock plans data"""
-    return [
-        {
-            "id": "plan-id-1",
-            "title": "My Plan",
-            "owner": "group-id-1",
-            "groupName": "My Team"
-        },
-        {
-            "id": "plan-id-2",
-            "title": "Another Plan",
-            "owner": "group-id-2",
-            "groupName": "Another Team"
-        }
-    ]
+    return get_mock_plans_data()
 
 
 @pytest.fixture
 def mock_buckets():
     """Return mock buckets data"""
-    return [
-        {
-            "id": "bucket-id-1",
-            "name": "To Do",
-            "planId": "plan-id-1"
-        },
-        {
-            "id": "bucket-id-2",
-            "name": "In Progress",
-            "planId": "plan-id-1"
-        },
-        {
-            "id": "bucket-id-3",
-            "name": "Done",
-            "planId": "plan-id-1"
-        }
-    ]
+    return get_mock_buckets_data()
 
 
 @pytest.fixture
 def mock_task():
     """Return mock task data"""
-    return {
-        "id": "task-id-123",
-        "title": "Test Task",
-        "planId": "plan-id-1",
-        "bucketId": "bucket-id-1",
-        "detailsUrl": "https://planner.cloud.microsoft/tasks/task-id-123"
-    }
+    return get_mock_task_data()
 
 
 @pytest.fixture
