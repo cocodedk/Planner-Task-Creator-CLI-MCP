@@ -44,10 +44,11 @@ def complete_subtask(task_id: str, subtask_title: str, token: str) -> dict:
             "message": f"Subtask '{subtask_title}' not found"
         }))
 
-    # Create a clean copy of checklist (remove @odata annotations)
+    # Create a clean copy of checklist with @odata.type annotation
     clean_checklist = {}
     for key, value in checklist.items():
         clean_checklist[key] = {
+            "@odata.type": "#microsoft.graph.plannerChecklistItem",
             "title": value.get("title"),
             "isChecked": value.get("isChecked", False)
         }
@@ -82,10 +83,11 @@ def complete_subtask(task_id: str, subtask_title: str, token: str) -> dict:
                     "message": f"Subtask '{subtask_title}' not found after retry"
                 }))
 
-            # Rebuild clean checklist
+            # Rebuild clean checklist with @odata.type annotation
             clean_checklist = {}
             for key, value in checklist.items():
                 clean_checklist[key] = {
+                    "@odata.type": "#microsoft.graph.plannerChecklistItem",
                     "title": value.get("title"),
                     "isChecked": value.get("isChecked", False)
                 }

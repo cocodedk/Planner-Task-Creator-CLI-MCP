@@ -32,33 +32,36 @@ def add_subtask(task_id: str, subtask_title: str, token: str) -> dict:
     # Get existing checklist or initialize empty dict
     checklist = details.get("checklist", {})
 
-    # Create a clean copy of existing items (remove @odata annotations)
+    # Create a clean copy of existing items with @odata.type annotation
+    # Note: We regenerate orderHints to avoid API-generated formats that may be invalid
     clean_checklist = {}
     for key, value in checklist.items():
         clean_checklist[key] = {
+            "@odata.type": "#microsoft.graph.plannerChecklistItem",
             "title": value.get("title"),
             "isChecked": value.get("isChecked", False)
         }
-        # Include orderHint only if it exists
-        if "orderHint" in value and value["orderHint"]:
-            clean_checklist[key]["orderHint"] = value["orderHint"]
+        # Do NOT include orderHint from existing items as API may generate invalid formats
+        # We'll generate new hints based on position
 
     # Generate new item ID
     item_id = str(uuid.uuid4())
 
     # Generate a proper orderHint based on existing items
-    # For Planner API, orderHint can be: " !" or a more complex string
-    # If no existing items, use " !"
+    # For Planner API, orderHint format rules:
+    # - Must contain at least one space and end with exclamation point
+    # - Number of exclamation points must be >= number of spaces
+    # - Valid: " !", " !!", " !!!", etc.
     if not clean_checklist:
         order_hint = " !"
     else:
-        # Get max orderHint length and add more
-        existing_hints = [item.get("orderHint", " !") for item in clean_checklist.values()]
-        max_hint = max(existing_hints, key=len) if existing_hints else " !"
-        order_hint = max_hint + "!"
+        # Use equal spaces and exclamation points for simplicity
+        num_items = len(clean_checklist)
+        order_hint = " " * (num_items + 1) + "!" * (num_items + 1)
 
-    # Add new item
+    # Add new item with @odata.type annotation
     clean_checklist[item_id] = {
+        "@odata.type": "#microsoft.graph.plannerChecklistItem",
         "title": subtask_title,
         "isChecked": False,
         "orderHint": order_hint
@@ -75,26 +78,26 @@ def add_subtask(task_id: str, subtask_title: str, token: str) -> dict:
             etag = details["@odata.etag"]
             checklist = details.get("checklist", {})
 
-            # Rebuild clean checklist
+            # Rebuild clean checklist with @odata.type annotation
             clean_checklist = {}
             for key, value in checklist.items():
                 clean_checklist[key] = {
+                    "@odata.type": "#microsoft.graph.plannerChecklistItem",
                     "title": value.get("title"),
                     "isChecked": value.get("isChecked", False)
                 }
-                if "orderHint" in value and value["orderHint"]:
-                    clean_checklist[key]["orderHint"] = value["orderHint"]
+                # Do NOT include orderHint from existing items
 
             # Recalculate orderHint
             if not clean_checklist:
                 order_hint = " !"
             else:
-                existing_hints = [item.get("orderHint", " !") for item in clean_checklist.values()]
-                max_hint = max(existing_hints, key=len) if existing_hints else " !"
-                order_hint = max_hint + "!"
+                num_items = len(clean_checklist)
+                order_hint = " " * (num_items + 1) + "!" * (num_items + 1)
 
-            # Add new item
+            # Add new item with @odata.type annotation
             clean_checklist[item_id] = {
+                "@odata.type": "#microsoft.graph.plannerChecklistItem",
                 "title": subtask_title,
                 "isChecked": False,
                 "orderHint": order_hint
