@@ -3,10 +3,11 @@ Task Creation Module
 Handles creating new tasks in Microsoft Planner.
 """
 
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 from .constants import BASE_GRAPH_URL
 from .graph_client import get_json, post_json, patch_json
+from .resolution_users import resolve_users
 
 
 def parse_labels(labels_csv: Optional[str]) -> Dict[str, bool]:
@@ -38,6 +39,25 @@ def parse_labels(labels_csv: Optional[str]) -> Dict[str, bool]:
     return categories
 
 
+def build_assignments(user_ids: List[str]) -> Dict[str, dict]:
+    """
+    Build Graph API assignments payload structure.
+
+    Args:
+        user_ids: List of User IDs (GUIDs)
+
+    Returns:
+        Dictionary for 'assignments' field
+    """
+    assignments = {}
+    for user_id in user_ids:
+        assignments[user_id] = {
+            "@odata.type": "#microsoft.graph.plannerAssignment",
+            "orderHint": " !"
+        }
+    return assignments
+
+
 def create_task(
     token: str,
     plan_id: str,
@@ -45,7 +65,8 @@ def create_task(
     title: str,
     description: Optional[str] = None,
     due_date: Optional[str] = None,
-    labels: Optional[str] = None
+    labels: Optional[str] = None,
+    assignee: Optional[str] = None
 ) -> dict:
     """
     Create a task in Microsoft Planner.
@@ -58,6 +79,7 @@ def create_task(
         description: Optional task description
         due_date: Optional due date in YYYY-MM-DD format
         labels: Optional comma-separated labels
+        assignee: Optional comma-separated user emails/UPNs/User IDs
 
     Returns:
         Dictionary with taskId, webUrl, and bucketId
@@ -75,6 +97,10 @@ def create_task(
 
     if labels:
         payload["appliedCategories"] = parse_labels(labels)
+
+    if assignee:
+        user_ids = resolve_users(token, assignee)
+        payload["assignments"] = build_assignments(user_ids)
 
     # Create task
     url = f"{BASE_GRAPH_URL}/planner/tasks"

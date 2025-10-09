@@ -149,7 +149,7 @@ def add_task_cmd(app: typer.Typer):
         bucket: Optional[str] = typer.Option(None, "--bucket", help="Bucket name or ID"),
         desc: Optional[str] = typer.Option(None, "--desc", help="Task description"),
         due: Optional[str] = typer.Option(None, "--due", help="Due date (YYYY-MM-DD)"),
-        assignee: Optional[str] = typer.Option(None, "--assignee", help="Assignee email (not implemented)"),
+        assignee: Optional[str] = typer.Option(None, "--assignee", help="Comma-separated user emails or User IDs"),
         labels: Optional[str] = typer.Option(None, "--labels", help="Comma-separated labels (e.g., Label1,Label3)"),
         verbose: bool = typer.Option(False, "--verbose", help="Verbose output")
     ):
@@ -195,7 +195,8 @@ def add_task_cmd(app: typer.Typer):
                 title=title,
                 description=desc,
                 due_date=due,
-                labels=labels
+                labels=labels,
+                assignee=assignee
             )
 
             # Output result
