@@ -45,6 +45,7 @@ def complete_subtask(task_id: str, subtask_title: str, token: str) -> dict:
         }))
 
     # Create a clean copy of checklist with @odata.type annotation
+    # Note: Do NOT include orderHint from existing items as API may generate invalid formats
     clean_checklist = {}
     for key, value in checklist.items():
         clean_checklist[key] = {
@@ -52,9 +53,7 @@ def complete_subtask(task_id: str, subtask_title: str, token: str) -> dict:
             "title": value.get("title"),
             "isChecked": value.get("isChecked", False)
         }
-        # Include orderHint only if it exists
-        if "orderHint" in value and value["orderHint"]:
-            clean_checklist[key]["orderHint"] = value["orderHint"]
+        # Do NOT include orderHint from existing items
 
     # Mark the item as checked
     clean_checklist[item_id]["isChecked"] = True
@@ -84,6 +83,7 @@ def complete_subtask(task_id: str, subtask_title: str, token: str) -> dict:
                 }))
 
             # Rebuild clean checklist with @odata.type annotation
+            # Note: Do NOT include orderHint from existing items as API may generate invalid formats
             clean_checklist = {}
             for key, value in checklist.items():
                 clean_checklist[key] = {
@@ -91,8 +91,7 @@ def complete_subtask(task_id: str, subtask_title: str, token: str) -> dict:
                     "title": value.get("title"),
                     "isChecked": value.get("isChecked", False)
                 }
-                if "orderHint" in value and value["orderHint"]:
-                    clean_checklist[key]["orderHint"] = value["orderHint"]
+                # Do NOT include orderHint from existing items
 
             # Mark as checked
             clean_checklist[item_id]["isChecked"] = True
