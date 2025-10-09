@@ -85,3 +85,24 @@ export async function handleDeleteTask(args: { task: string; plan?: string }): P
   const result = await runCli(cliArgs);
   return parseCliOutput(result);
 }
+
+/**
+ * Handle planner_updateTask tool
+ */
+export async function handleUpdateTask(args: {
+  task: string;
+  plan?: string;
+  labels?: string;
+}): Promise<any> {
+  const cliArgs = ["update-task-labels-cmd", "--task", args.task];
+
+  if (args.plan) {
+    cliArgs.push("--plan", args.plan);
+  }
+  if (args.labels !== undefined) {
+    cliArgs.push("--labels", args.labels);
+  }
+
+  const result = await runCli(cliArgs);
+  return parseCliOutput(result);
+}

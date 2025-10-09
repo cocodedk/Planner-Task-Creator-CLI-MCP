@@ -17,6 +17,7 @@ import {
   handleCompleteTask,
   handleMoveTask,
   handleDeleteTask,
+  handleUpdateTask,
 } from "./handlers-tasks.js";
 
 import {
@@ -61,6 +62,9 @@ export async function handleToolCall(name: string, args: any): Promise<any> {
 
     case "planner_deleteTask":
       return handleDeleteTask(args);
+
+    case "planner_updateTask":
+      return handleUpdateTask(args);
 
     // Subtask tools
     case "planner_addSubtask":

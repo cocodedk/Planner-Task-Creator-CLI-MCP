@@ -5,7 +5,7 @@ Re-exports all task CLI commands from modular structure.
 
 import typer
 from .cli_task_list import list_tasks_cmd, find_task_cmd
-from .cli_task_update import complete_task_cmd, move_task_cmd, delete_task_cmd
+from .cli_task_update import complete_task_cmd, move_task_cmd, delete_task_cmd, update_task_labels_cmd
 from .cli_task_subtask import add_subtask_cmd, list_subtasks_cmd, complete_subtask_cmd
 
 
@@ -15,6 +15,7 @@ def register_task_commands(app: typer.Typer):
     find_task_cmd(app)
     complete_task_cmd(app)
     move_task_cmd(app)
+    update_task_labels_cmd(app)
     add_subtask_cmd(app)
     list_subtasks_cmd(app)
     complete_subtask_cmd(app)

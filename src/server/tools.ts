@@ -250,4 +250,26 @@ export const TOOLS: Tool[] = [
       required: ["task"],
     },
   },
+  {
+    name: "planner_updateTask",
+    description: "Update labels on an existing task.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        task: {
+          type: "string",
+          description: "Task ID or title (required)",
+        },
+        plan: {
+          type: "string",
+          description: "Plan name or ID (required for title-based search)",
+        },
+        labels: {
+          type: "string",
+          description: "Comma-separated labels like 'Label1,Label3' (optional, empty string to clear all labels)",
+        },
+      },
+      required: ["task"],
+    },
+  },
 ];
