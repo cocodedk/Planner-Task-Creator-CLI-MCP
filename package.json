@@ -1,0 +1,22 @@
+{
+  "name": "planner-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server wrapper for Microsoft Planner CLI",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsc && node dist/server.js"
+  },
+  "keywords": ["mcp", "planner", "microsoft", "graph"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  }
+}
