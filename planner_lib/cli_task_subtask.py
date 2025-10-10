@@ -41,7 +41,8 @@ def add_subtask_cmd(app: typer.Typer):
             token = get_tokens(tenant_id, client_id)
 
             plan_id = None
-            if plan or not GUID_PATTERN.match(task):
+            if not GUID_PATTERN.match(task):
+                # Task is a title, need plan for resolution
                 plan_input = plan or cfg.get("default_plan")
                 if not plan_input:
                     error = {
@@ -51,6 +52,10 @@ def add_subtask_cmd(app: typer.Typer):
                     print(json.dumps(error))
                     raise typer.Exit(2)
                 plan_obj = resolve_plan(token, plan_input)
+                plan_id = plan_obj["id"]
+            elif plan:
+                # Task is a GUID but plan was explicitly provided
+                plan_obj = resolve_plan(token, plan)
                 plan_id = plan_obj["id"]
 
             task_obj = resolve_task(token, task, plan_id)
@@ -93,7 +98,8 @@ def list_subtasks_cmd(app: typer.Typer):
             token = get_tokens(tenant_id, client_id)
 
             plan_id = None
-            if plan or not GUID_PATTERN.match(task):
+            if not GUID_PATTERN.match(task):
+                # Task is a title, need plan for resolution
                 plan_input = plan or cfg.get("default_plan")
                 if not plan_input:
                     error = {
@@ -103,6 +109,10 @@ def list_subtasks_cmd(app: typer.Typer):
                     print(json.dumps(error))
                     raise typer.Exit(2)
                 plan_obj = resolve_plan(token, plan_input)
+                plan_id = plan_obj["id"]
+            elif plan:
+                # Task is a GUID but plan was explicitly provided
+                plan_obj = resolve_plan(token, plan)
                 plan_id = plan_obj["id"]
 
             task_obj = resolve_task(token, task, plan_id)
@@ -146,7 +156,8 @@ def complete_subtask_cmd(app: typer.Typer):
             token = get_tokens(tenant_id, client_id)
 
             plan_id = None
-            if plan or not GUID_PATTERN.match(task):
+            if not GUID_PATTERN.match(task):
+                # Task is a title, need plan for resolution
                 plan_input = plan or cfg.get("default_plan")
                 if not plan_input:
                     error = {
@@ -156,6 +167,10 @@ def complete_subtask_cmd(app: typer.Typer):
                     print(json.dumps(error))
                     raise typer.Exit(2)
                 plan_obj = resolve_plan(token, plan_input)
+                plan_id = plan_obj["id"]
+            elif plan:
+                # Task is a GUID but plan was explicitly provided
+                plan_obj = resolve_plan(token, plan)
                 plan_id = plan_obj["id"]
 
             task_obj = resolve_task(token, task, plan_id)
