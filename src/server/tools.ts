@@ -256,7 +256,7 @@ export const TOOLS: Tool[] = [
   },
   {
     name: "planner_updateTask",
-    description: "Update labels on an existing task.",
+    description: "Update properties on an existing task (title, description, labels).",
     inputSchema: {
       type: "object",
       properties: {
@@ -267,6 +267,14 @@ export const TOOLS: Tool[] = [
         plan: {
           type: "string",
           description: "Plan name or ID (required for title-based search)",
+        },
+        title: {
+          type: "string",
+          description: "New task title (optional)",
+        },
+        description: {
+          type: "string",
+          description: "New task description (optional)",
         },
         labels: {
           type: "string",

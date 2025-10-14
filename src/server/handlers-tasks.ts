@@ -92,12 +92,20 @@ export async function handleDeleteTask(args: { task: string; plan?: string }): P
 export async function handleUpdateTask(args: {
   task: string;
   plan?: string;
+  title?: string;
+  description?: string;
   labels?: string;
 }): Promise<any> {
-  const cliArgs = ["update-task-labels-cmd", "--task", args.task];
+  const cliArgs = ["update-task", "--task", args.task];
 
   if (args.plan) {
     cliArgs.push("--plan", args.plan);
+  }
+  if (args.title) {
+    cliArgs.push("--title", args.title);
+  }
+  if (args.description) {
+    cliArgs.push("--description", args.description);
   }
   if (args.labels !== undefined) {
     cliArgs.push("--labels", args.labels);
