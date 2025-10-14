@@ -97,3 +97,64 @@ def resolve_task(token: str, task: str, plan_id: Optional[str] = None) -> dict:
             "candidates": candidates
         }
         raise ValueError(json.dumps(error))
+
+
+def get_task_details(task_id: str, token: str) -> dict:
+    """
+    Fetch task details by task ID.
+
+    Args:
+        task_id: Task GUID
+        token: Access token
+
+    Returns:
+        Full task object with all properties
+
+    Raises:
+        ValueError: If task_id invalid format or task not found
+    """
+    if not GUID_PATTERN.match(task_id):
+        raise ValueError(json.dumps({
+            "code": "InvalidTaskId",
+            "message": f"Invalid task ID format: {task_id}"
+        }))
+
+    url = f"{BASE_GRAPH_URL}/planner/tasks/{task_id}"
+    return get_json(url, token)
+
+
+def find_task_by_title(title: str, plan_id: str, token: str) -> dict:
+    """
+    Find task by title within a plan.
+
+    Args:
+        title: Task title (case-insensitive)
+        plan_id: Plan ID to search within
+        token: Access token
+
+    Returns:
+        Task object if single match found
+
+    Raises:
+        ValueError: With candidates if ambiguous or not found
+    """
+    tasks = list_tasks(token, plan_id=plan_id)
+    matches = case_insensitive_match(tasks, "title", title)
+
+    if len(matches) == 1:
+        return matches[0]
+    elif len(matches) > 1:
+        candidates = [{"id": t["id"], "title": t["title"], "bucketId": t.get("bucketId", "")}
+                     for t in matches]
+        raise ValueError(json.dumps({
+            "code": "AmbiguousTask",
+            "message": f"Multiple tasks match '{title}'",
+            "candidates": candidates
+        }))
+    else:
+        candidates = [{"id": t["id"], "title": t["title"]} for t in tasks[:5]]
+        raise ValueError(json.dumps({
+            "code": "TaskNotFound",
+            "message": f"Task '{title}' not found",
+            "candidates": candidates
+        }))
