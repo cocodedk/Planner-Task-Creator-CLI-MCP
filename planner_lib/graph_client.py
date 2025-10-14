@@ -96,3 +96,26 @@ def patch_json(url: str, token: str, payload: dict, etag: str) -> dict:
         return response.json()
     return {}
 
+
+def delete_json(url: str, token: str, etag: str) -> dict:
+    """
+    Make DELETE request to Graph API with ETag.
+
+    Args:
+        url: Full URL to request
+        token: Access token
+        etag: ETag for optimistic concurrency
+
+    Returns:
+        Empty dict on success (204 No Content)
+
+    Raises:
+        requests.RequestException: On network or HTTP errors
+    """
+    headers = auth_headers(token)
+    headers["If-Match"] = etag
+
+    response = requests.delete(url, headers=headers)
+    response.raise_for_status()
+
+    return {}
