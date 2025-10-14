@@ -308,4 +308,84 @@ export const TOOLS: Tool[] = [
       required: ["user"],
     },
   },
+  {
+    name: "planner_createBucket",
+    description: "Create a new bucket in a Microsoft Planner plan.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+          description: "Bucket name (required)",
+        },
+        plan: {
+          type: "string",
+          description: "Plan name or ID (required)",
+        },
+      },
+      required: ["name", "plan"],
+    },
+  },
+  {
+    name: "planner_deleteBucket",
+    description: "Delete a bucket from a Microsoft Planner plan.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        bucket: {
+          type: "string",
+          description: "Bucket name or ID (required)",
+        },
+        plan: {
+          type: "string",
+          description: "Plan name or ID (required)",
+        },
+      },
+      required: ["bucket", "plan"],
+    },
+  },
+  {
+    name: "planner_renameBucket",
+    description: "Rename a bucket in a Microsoft Planner plan.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        bucket: {
+          type: "string",
+          description: "Bucket name or ID (required)",
+        },
+        newName: {
+          type: "string",
+          description: "New bucket name (required)",
+        },
+        plan: {
+          type: "string",
+          description: "Plan name or ID (required)",
+        },
+      },
+      required: ["bucket", "newName", "plan"],
+    },
+  },
+  {
+    name: "planner_moveBucketTasks",
+    description: "Move all tasks from one bucket to another within the same plan.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        source: {
+          type: "string",
+          description: "Source bucket name or ID (required)",
+        },
+        target: {
+          type: "string",
+          description: "Target bucket name or ID (required)",
+        },
+        plan: {
+          type: "string",
+          description: "Plan name or ID (required)",
+        },
+      },
+      required: ["source", "target", "plan"],
+    },
+  },
 ];

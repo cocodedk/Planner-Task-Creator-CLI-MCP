@@ -31,6 +31,13 @@ import {
   handleLookupUser,
 } from "./handlers-users.js";
 
+import {
+  handleCreateBucket,
+  handleDeleteBucket,
+  handleRenameBucket,
+  handleMoveBucketTasks,
+} from "./handlers-buckets.js";
+
 /**
  * Handle tool execution by routing to specific handlers
  */
@@ -87,6 +94,19 @@ export async function handleToolCall(name: string, args: any): Promise<any> {
 
     case "planner_lookupUser":
       return handleLookupUser(args);
+
+    // Bucket management tools
+    case "planner_createBucket":
+      return handleCreateBucket(args);
+
+    case "planner_deleteBucket":
+      return handleDeleteBucket(args);
+
+    case "planner_renameBucket":
+      return handleRenameBucket(args);
+
+    case "planner_moveBucketTasks":
+      return handleMoveBucketTasks(args);
 
     default:
       throw new Error(`Unknown tool: ${name}`);
