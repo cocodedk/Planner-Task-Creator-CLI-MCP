@@ -17,6 +17,8 @@ from .task_creation import parse_labels, create_task
 from .task_management import (
     list_tasks,
     resolve_task,
+    get_task_details,
+    find_task_by_title,
     complete_task_op,
     move_task_op,
     add_subtask,
@@ -50,6 +52,8 @@ __all__ = [
     # Task Management
     "list_tasks",
     "resolve_task",
+    "get_task_details",
+    "find_task_by_title",
     "complete_task_op",
     "move_task_op",
     "add_subtask",
