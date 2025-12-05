@@ -26,6 +26,20 @@ fi
 PYTHON_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
 echo -e "${GREEN}✓ Python $PYTHON_VERSION found${NC}"
 
+# Check pip
+echo "Checking pip installation..."
+if ! python3 -m pip --version &> /dev/null; then
+    echo -e "${RED}Error: pip is not installed${NC}"
+    echo "Please install pip:"
+    echo "  Ubuntu/Debian: sudo apt-get install python3-pip python3-venv"
+    echo "  Fedora: sudo dnf install python3-pip python3-venv"
+    echo "  Arch: sudo pacman -S python-pip python-venv"
+    exit 1
+fi
+
+PIP_VERSION=$(python3 -m pip --version | cut -d' ' -f2)
+echo -e "${GREEN}✓ pip $PIP_VERSION found${NC}"
+
 # Check Node.js (optional)
 echo
 echo "Checking Node.js installation (for MCP server)..."
@@ -44,16 +58,37 @@ echo "Creating ~/.planner-cli directory..."
 mkdir -p ~/.planner-cli
 echo -e "${GREEN}✓ Directory created${NC}"
 
-# Install Python dependencies
+# Create virtual environment
 echo
-echo "Installing Python dependencies..."
-pip3 install -r requirements.txt
+echo "Setting up Python virtual environment..."
+if [ -d "venv" ]; then
+    echo -e "${YELLOW}⚠ Virtual environment already exists, recreating...${NC}"
+    rm -rf venv
+fi
+
+python3 -m venv venv
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✓ Virtual environment created${NC}"
+else
+    echo -e "${RED}Error creating virtual environment${NC}"
+    echo "Make sure python3-venv is installed:"
+    echo "  Ubuntu/Debian: sudo apt-get install python3-venv"
+    exit 1
+fi
+
+# Activate virtual environment and install dependencies
+echo
+echo "Installing Python dependencies in virtual environment..."
+source venv/bin/activate
+pip install --upgrade pip > /dev/null 2>&1
+pip install -r requirements.txt
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✓ Python dependencies installed${NC}"
 else
     echo -e "${RED}Error installing Python dependencies${NC}"
     exit 1
 fi
+deactivate
 
 # Copy CLI to ~/.planner-cli
 echo
@@ -128,7 +163,9 @@ EOF
     read -p "Test authentication now? (y/n) " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        python3 ~/.planner-cli/planner.py init-auth
+        source venv/bin/activate
+        python ~/.planner-cli/planner.py init-auth
+        deactivate
     fi
 else
     echo
@@ -150,11 +187,15 @@ echo "Installation Complete!"
 echo "=========================================="
 echo
 echo "Next steps:"
-echo "1. Authenticate: planner init-auth"
-echo "2. Set defaults: planner set-defaults --plan \"My Plan\" --bucket \"To Do\""
-echo "3. Create a task: planner add --title \"My first task\""
+echo "1. Activate virtual environment: source venv/bin/activate"
+echo "2. Authenticate: python planner.py init-auth"
+echo "3. Set defaults: python planner.py set-defaults --plan \"My Plan\" --bucket \"To Do\""
+echo "4. Create a task: python planner.py add --title \"My first task\""
 echo
-echo "For help: planner --help"
+echo "Note: Always activate the virtual environment before using the CLI:"
+echo "  source venv/bin/activate"
+echo
+echo "For help: python planner.py --help"
 echo "Documentation: cat README.md"
 echo
 echo -e "${GREEN}Happy planning! 🚀${NC}"
