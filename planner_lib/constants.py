@@ -5,7 +5,15 @@ Constants for Microsoft Planner CLI
 import re
 
 BASE_GRAPH_URL = "https://graph.microsoft.com/v1.0"
-REQUIRED_SCOPES = ["Tasks.ReadWrite"]
+# Required scopes for Planner operations
+# Tasks.ReadWrite: Required for all task operations
+# Group.Read.All: Required for reading task comments (conversation threads)
+# Group.ReadWrite.All: Required for adding task comments (conversation threads)
+REQUIRED_SCOPES = [
+    "Tasks.ReadWrite",
+    "Group.Read.All",  # For reading task comments
+    "Group.ReadWrite.All",  # For adding task comments
+]
 
 # Pattern to match both standard GUIDs and Microsoft Planner IDs
 # Standard GUID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx

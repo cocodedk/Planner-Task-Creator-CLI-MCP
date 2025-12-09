@@ -38,6 +38,11 @@ import {
   handleMoveBucketTasks,
 } from "./handlers-buckets.js";
 
+import {
+  handleListComments,
+  handleAddComment,
+} from "./handlers-comments.js";
+
 /**
  * Handle tool execution by routing to specific handlers
  */
@@ -107,6 +112,13 @@ export async function handleToolCall(name: string, args: any): Promise<any> {
 
     case "planner_moveBucketTasks":
       return handleMoveBucketTasks(args);
+
+    // Comment tools
+    case "planner_listComments":
+      return handleListComments(args);
+
+    case "planner_addComment":
+      return handleAddComment(args);
 
     default:
       throw new Error(`Unknown tool: ${name}`);

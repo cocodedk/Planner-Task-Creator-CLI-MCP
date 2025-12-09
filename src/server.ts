@@ -49,12 +49,17 @@ async function main() {
         ],
       };
     } catch (error) {
+      // Preserve structured error data if available
+      const errorData = (error as any)?.errorData;
       const errorMessage = error instanceof Error ? error.message : String(error);
+
+      const errorResponse = errorData || { error: errorMessage };
+
       return {
         content: [
           {
             type: "text",
-            text: JSON.stringify({ error: errorMessage }, null, 2),
+            text: JSON.stringify(errorResponse, null, 2),
           },
         ],
         isError: true,

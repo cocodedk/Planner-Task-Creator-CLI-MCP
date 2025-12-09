@@ -65,27 +65,63 @@ export async function runCli(args: string[]): Promise<{ code: number; stdout: st
     });
 
     child.on("close", (code) => {
+      // Debug logging for troubleshooting
+      if (code !== 0) {
+        console.error(`[MCP Debug] CLI failed with code ${code}`);
+        console.error(`[MCP Debug] stdout: ${stdout.substring(0, 200)}`);
+        console.error(`[MCP Debug] stderr: ${stderr.substring(0, 200)}`);
+      }
       resolve({ code: code || 0, stdout, stderr });
     });
   });
 }
 
 /**
- * Parse CLI output as JSON or return error
+ * Parse CLI output as JSON or throw error
  */
 export function parseCliOutput(result: { code: number; stdout: string; stderr: string }): any {
   if (result.code === 0) {
     try {
-      return JSON.parse(result.stdout);
+      return JSON.parse(result.stdout.trim());
     } catch {
       return { ok: true, message: result.stdout.trim() };
     }
   } else {
-    // Try to parse error as JSON
+    // Try to parse error as JSON from stdout first, then stderr
+    let errorObj: any;
+    const stdoutTrimmed = result.stdout.trim();
+    const stderrTrimmed = result.stderr.trim();
+
+    // Try parsing stdout as JSON
     try {
-      return { error: JSON.parse(result.stdout) };
+      if (stdoutTrimmed) {
+        errorObj = JSON.parse(stdoutTrimmed);
+      } else {
+        throw new Error("Empty stdout");
+      }
     } catch {
-      return { error: { code: "Error", message: result.stderr || result.stdout } };
+      // Try parsing stderr as JSON
+      try {
+        if (stderrTrimmed) {
+          errorObj = JSON.parse(stderrTrimmed);
+        } else {
+          throw new Error("Empty stderr");
+        }
+      } catch {
+        // Neither is valid JSON, create error object from available info
+        const errorMessage = stderrTrimmed || stdoutTrimmed || "Unknown error";
+        errorObj = { code: "Error", message: errorMessage };
+      }
     }
+
+    // Throw error so MCP server can properly mark it as an error
+    // Extract error message from various possible formats
+    const errorMessage =
+      errorObj.message ||
+      errorObj.error?.message ||
+      (typeof errorObj === 'string' ? errorObj : JSON.stringify(errorObj));
+    const error = new Error(errorMessage);
+    (error as any).errorData = errorObj;
+    throw error;
   }
 }
