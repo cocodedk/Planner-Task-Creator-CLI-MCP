@@ -396,4 +396,44 @@ export const TOOLS: Tool[] = [
       required: ["source", "target", "plan"],
     },
   },
+  {
+    name: "planner_listComments",
+    description: "List all comments on a task.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        task: {
+          type: "string",
+          description: "Task ID or title (required)",
+        },
+        plan: {
+          type: "string",
+          description: "Plan name or ID (required)",
+        },
+      },
+      required: ["task", "plan"],
+    },
+  },
+  {
+    name: "planner_addComment",
+    description: "Add a comment to a task.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        task: {
+          type: "string",
+          description: "Task ID or title (required)",
+        },
+        comment: {
+          type: "string",
+          description: "Comment text to add (required)",
+        },
+        plan: {
+          type: "string",
+          description: "Plan name or ID (required)",
+        },
+      },
+      required: ["task", "comment", "plan"],
+    },
+  },
 ];

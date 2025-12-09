@@ -9,6 +9,8 @@ A command-line tool and MCP (Model Context Protocol) server for creating and man
 
 - 🔐 **Secure OAuth Authentication**: Device code flow with token caching
 - 📋 **Task Management**: Create tasks with titles, descriptions, due dates, and labels
+- 💬 **Task Comments**: Read and add comments to tasks via conversation threads
+- 📝 **Task Descriptions**: Automatically included in all task listings and searches
 - 🎯 **Smart Resolution**: Case-insensitive plan and bucket name resolution
 - ⚙️ **Flexible Configuration**: CLI flags, environment variables, and config file support
 - 🤖 **MCP Integration**: Expose Planner functionality to AI assistants like Claude
@@ -57,11 +59,14 @@ A command-line tool and MCP (Model Context Protocol) server for creating and man
 1. Register an app in [Azure Portal](https://portal.azure.com)
 2. Set redirect URI to `http://localhost` (Public client/native)
 3. Add API permissions:
-   - `Tasks.ReadWrite`
-   - `Group.ReadWrite.All`
-   - `offline_access`
-4. Grant admin consent for permissions
+   - `Tasks.ReadWrite` (required for all task operations)
+   - `Group.Read.All` (required for reading task comments)
+   - `Group.ReadWrite.All` (required for adding task comments)
+   - `offline_access` (optional, for token refresh)
+4. Grant admin consent for permissions (required for Group permissions)
 5. Note your `Tenant ID` and `Client ID`
+
+> **Note:** The Group permissions require admin consent. After adding them, click "Grant admin consent" in the Azure Portal to enable comment functionality.
 
 ### Python CLI Setup
 
@@ -200,11 +205,39 @@ Add to your MCP client configuration (e.g., Claude Desktop):
 
 #### Available Tools
 
+**Core Tools:**
 1. **planner_initAuth**: Initialize authentication
 2. **planner_createTask**: Create a new task
 3. **planner_setDefaults**: Set default plan and bucket
 4. **planner_listPlans**: List available plans
 5. **planner_listBuckets**: List buckets in a plan
+
+**Task Management:**
+6. **planner_listTasks**: List tasks in a plan or bucket (includes descriptions)
+7. **planner_findTask**: Find a task by ID or title (includes description)
+8. **planner_completeTask**: Mark a task as complete
+9. **planner_moveTask**: Move a task to a different bucket
+10. **planner_updateTask**: Update task properties (title, description, labels)
+11. **planner_deleteTask**: Delete a task
+
+**Subtasks:**
+12. **planner_addSubtask**: Add a subtask (checklist item)
+13. **planner_listSubtasks**: List subtasks for a task
+14. **planner_completeSubtask**: Mark a subtask as complete
+
+**Comments:**
+15. **planner_listComments**: List all comments on a task
+16. **planner_addComment**: Add a comment to a task
+
+**User Management:**
+17. **planner_searchUsers**: Search for users by name
+18. **planner_lookupUser**: Resolve user identifier to full details
+
+**Bucket Management:**
+19. **planner_createBucket**: Create a new bucket
+20. **planner_deleteBucket**: Delete a bucket
+21. **planner_renameBucket**: Rename a bucket
+22. **planner_moveBucketTasks**: Move all tasks from one bucket to another
 
 ## API Reference
 
@@ -244,6 +277,36 @@ Create a new task in Microsoft Planner.
 - `--due TEXT`: Due date in YYYY-MM-DD format (optional)
 - `--labels TEXT`: Comma-separated labels like "Label1,Label3" (optional)
 - `--verbose`: Enable verbose output (optional)
+
+#### `list-tasks-cmd`
+List tasks in a plan or bucket. Task descriptions are automatically included.
+
+**Options:**
+- `--plan TEXT`: Plan name or ID (required)
+- `--bucket TEXT`: Bucket name or ID (optional)
+- `--incomplete`: Show only incomplete tasks (optional)
+
+#### `find-task-cmd`
+Find a task by ID or title. Returns full task details including description.
+
+**Options:**
+- `--task TEXT`: Task ID or title (required)
+- `--plan TEXT`: Plan name or ID (required for title-based search)
+
+#### `list-comments-cmd`
+List all comments on a task.
+
+**Options:**
+- `--task TEXT`: Task ID or title (required)
+- `--plan TEXT`: Plan name or ID (required)
+
+#### `add-comment-cmd`
+Add a comment to a task. Note: Comments can only be added to tasks that already have a conversation thread (typically created via Planner UI).
+
+**Options:**
+- `--task TEXT`: Task ID or title (required)
+- `--comment TEXT`: Comment text to add (required)
+- `--plan TEXT`: Plan name or ID (required)
 
 ### Label Format
 

@@ -27,7 +27,7 @@ def list_tasks(
         incomplete_only: Filter to show only incomplete tasks
 
     Returns:
-        List of task objects
+        List of task objects with description included
 
     Raises:
         ValueError: If neither plan_id nor bucket_id provided
@@ -45,6 +45,18 @@ def list_tasks(
     if incomplete_only:
         tasks = [t for t in tasks if t.get("percentComplete", 0) < 100]
 
+    # Fetch descriptions for all tasks
+    for task in tasks:
+        task_id = task.get("id")
+        if task_id:
+            try:
+                details_url = f"{BASE_GRAPH_URL}/planner/tasks/{task_id}/details"
+                details = get_json(details_url, token)
+                task["description"] = details.get("description", "")
+            except Exception:
+                # If details fetch fails, set empty description
+                task["description"] = ""
+
     return tasks
 
 
@@ -58,7 +70,7 @@ def resolve_task(token: str, task: str, plan_id: Optional[str] = None) -> dict:
         plan_id: Plan ID (required for title search)
 
     Returns:
-        Task object with full details
+        Task object with full details including description
 
     Raises:
         ValueError: With JSON error if task not found or ambiguous
@@ -66,7 +78,17 @@ def resolve_task(token: str, task: str, plan_id: Optional[str] = None) -> dict:
     # GUID → fetch directly
     if GUID_PATTERN.match(task):
         url = f"{BASE_GRAPH_URL}/planner/tasks/{task}"
-        return get_json(url, token)
+        task_obj = get_json(url, token)
+        # Fetch description
+        task_id = task_obj.get("id")
+        if task_id:
+            try:
+                details_url = f"{BASE_GRAPH_URL}/planner/tasks/{task_id}/details"
+                details = get_json(details_url, token)
+                task_obj["description"] = details.get("description", "")
+            except Exception:
+                task_obj["description"] = ""
+        return task_obj
 
     # Title → search
     if not plan_id:
@@ -108,7 +130,7 @@ def get_task_details(task_id: str, token: str) -> dict:
         token: Access token
 
     Returns:
-        Full task object with all properties
+        Full task object with all properties including description
 
     Raises:
         ValueError: If task_id invalid format or task not found
@@ -120,7 +142,17 @@ def get_task_details(task_id: str, token: str) -> dict:
         }))
 
     url = f"{BASE_GRAPH_URL}/planner/tasks/{task_id}"
-    return get_json(url, token)
+    task_obj = get_json(url, token)
+
+    # Fetch description
+    try:
+        details_url = f"{BASE_GRAPH_URL}/planner/tasks/{task_id}/details"
+        details = get_json(details_url, token)
+        task_obj["description"] = details.get("description", "")
+    except Exception:
+        task_obj["description"] = ""
+
+    return task_obj
 
 
 def find_task_by_title(title: str, plan_id: str, token: str) -> dict:
@@ -133,7 +165,7 @@ def find_task_by_title(title: str, plan_id: str, token: str) -> dict:
         token: Access token
 
     Returns:
-        Task object if single match found
+        Task object if single match found (includes description)
 
     Raises:
         ValueError: With candidates if ambiguous or not found
