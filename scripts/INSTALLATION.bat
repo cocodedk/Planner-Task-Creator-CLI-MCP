@@ -40,6 +40,21 @@ if %ERRORLEVEL% equ 0 (
 for /f "tokens=*" %%i in ('%PYTHON_CMD% --version 2^>^&1') do set PYTHON_VERSION=%%i
 echo [OK] %PYTHON_VERSION% found
 
+REM Validate Python version (3.8+)
+for /f "tokens=2 delims= " %%a in ("%PYTHON_VERSION%") do set "PY_VER=%%a"
+for /f "tokens=1,2 delims=." %%a in ("%PY_VER%") do (
+    set "PY_MAJOR=%%a"
+    set "PY_MINOR=%%b"
+)
+if !PY_MAJOR! LSS 3 (
+    echo [ERROR] Python 3.8 or later is required ^(found !PY_MAJOR!.!PY_MINOR!^)
+    exit /b 1
+)
+if !PY_MAJOR! EQU 3 if !PY_MINOR! LSS 8 (
+    echo [ERROR] Python 3.8 or later is required ^(found !PY_MAJOR!.!PY_MINOR!^)
+    exit /b 1
+)
+
 REM Check pip
 echo Checking pip installation...
 %PYTHON_CMD% -m pip --version >nul 2>&1
@@ -58,7 +73,17 @@ where node >nul 2>&1
 if %ERRORLEVEL% equ 0 (
     for /f "tokens=*" %%i in ('node --version 2^>^&1') do set NODE_VERSION=%%i
     echo [OK] Node.js !NODE_VERSION! found
-    set "INSTALL_MCP=1"
+    
+    REM Also check for npm
+    where npm >nul 2>&1
+    if !ERRORLEVEL! equ 0 (
+        for /f "tokens=*" %%i in ('npm --version 2^>^&1') do set NPM_VERSION=%%i
+        echo [OK] npm !NPM_VERSION! found
+        set "INSTALL_MCP=1"
+    ) else (
+        echo [WARN] npm not found - MCP server will not be installed
+        echo        npm should come with Node.js. Try reinstalling Node.js
+    )
 ) else (
     echo [WARN] Node.js not found - MCP server will not be installed
     echo        Install from https://nodejs.org if you want MCP server support
@@ -126,16 +151,22 @@ if "%INSTALL_MCP%"=="1" (
         echo Installing Node.js dependencies...
         pushd "%PROJECT_ROOT%"
         call npm install
-
-        echo Building TypeScript...
-        call npm run build
-
-        if exist "%PROJECT_ROOT%\dist\server.js" (
-            echo [OK] MCP server built successfully
+        if !ERRORLEVEL! neq 0 (
+            echo [ERROR] Error installing Node.js dependencies
+            popd
         ) else (
-            echo [ERROR] Error building MCP server
+            echo [OK] Node.js dependencies installed
+            
+            echo Building TypeScript...
+            call npm run build
+
+            if exist "%PROJECT_ROOT%\dist\server.js" (
+                echo [OK] MCP server built successfully
+            ) else (
+                echo [ERROR] Error building MCP server
+            )
+            popd
         )
-        popd
     )
 )
 
