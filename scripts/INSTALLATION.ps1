@@ -110,7 +110,7 @@ Write-Host "[OK] Virtual environment created at: $venvPath" -ForegroundColor Gre
 # Activate virtual environment and install dependencies
 Write-Host ""
 Write-Host "Installing Python dependencies in virtual environment..." -ForegroundColor Yellow
-$activateScript = Join-Path $venvPath "Scripts" "Activate.ps1"
+$activateScript = Join-Path (Join-Path $venvPath "Scripts") "Activate.ps1"
 
 # Source the activation script
 . $activateScript
@@ -173,7 +173,7 @@ if ($installMcp) {
             Write-Host "Building TypeScript..." -ForegroundColor Yellow
             & npm run build
 
-            $serverJs = Join-Path $projectRoot "dist" "server.js"
+            $serverJs = Join-Path (Join-Path $projectRoot "dist") "server.js"
             if (Test-Path $serverJs) {
                 Write-Host "[OK] MCP server built successfully" -ForegroundColor Green
             } else {
