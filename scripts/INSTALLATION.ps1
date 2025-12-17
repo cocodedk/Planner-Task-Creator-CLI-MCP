@@ -34,19 +34,29 @@ if (-not $pythonCmd) {
     exit 1
 }
 
-$pythonVersion = & $pythonCmd --version 2>&1
-Write-Host "✓ $pythonVersion found" -ForegroundColor Green
+$pythonVersionOutput = & $pythonCmd --version 2>&1
+Write-Host "✓ $pythonVersionOutput found" -ForegroundColor Green
+
+# Validate Python version (3.8+)
+$versionMatch = [regex]::Match($pythonVersionOutput, "Python (\d+)\.(\d+)")
+if ($versionMatch.Success) {
+    $major = [int]$versionMatch.Groups[1].Value
+    $minor = [int]$versionMatch.Groups[2].Value
+    if ($major -lt 3 -or ($major -eq 3 -and $minor -lt 8)) {
+        Write-Host "Error: Python 3.8 or later is required (found $major.$minor)" -ForegroundColor Red
+        exit 1
+    }
+}
 
 # Check pip
 Write-Host "Checking pip installation..." -ForegroundColor Yellow
-try {
-    $pipVersion = & $pythonCmd -m pip --version 2>&1
-    Write-Host "✓ pip found" -ForegroundColor Green
-} catch {
+$pipOutput = & $pythonCmd -m pip --version 2>&1
+if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: pip is not installed" -ForegroundColor Red
     Write-Host "Please reinstall Python and ensure pip is included" -ForegroundColor Red
     exit 1
 }
+Write-Host "✓ pip found" -ForegroundColor Green
 
 # Check Node.js (optional)
 Write-Host ""
@@ -55,7 +65,16 @@ $installMcp = $false
 if (Test-Command "node") {
     $nodeVersion = & node --version 2>&1
     Write-Host "✓ Node.js $nodeVersion found" -ForegroundColor Green
-    $installMcp = $true
+
+    # Also check for npm
+    if (Test-Command "npm") {
+        $npmVersion = & npm --version 2>&1
+        Write-Host "✓ npm $npmVersion found" -ForegroundColor Green
+        $installMcp = $true
+    } else {
+        Write-Host "⚠ npm not found - MCP server will not be installed" -ForegroundColor Yellow
+        Write-Host "  npm should come with Node.js. Try reinstalling Node.js" -ForegroundColor Yellow
+    }
 } else {
     Write-Host "⚠ Node.js not found - MCP server will not be installed" -ForegroundColor Yellow
     Write-Host "  Install from https://nodejs.org if you want MCP server support" -ForegroundColor Yellow
@@ -96,8 +115,11 @@ $activateScript = Join-Path $venvPath "Scripts" "Activate.ps1"
 # Source the activation script
 . $activateScript
 
-# Upgrade pip
+# Upgrade pip (suppress output)
 & $pythonCmd -m pip install --upgrade pip 2>&1 | Out-Null
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Warning: Could not upgrade pip" -ForegroundColor Yellow
+}
 
 # Install requirements
 $requirementsPath = Join-Path $PSScriptRoot ".." "requirements.txt"
@@ -140,18 +162,25 @@ if ($installMcp) {
     if ($response -match "^[Yy]") {
         Write-Host "Installing Node.js dependencies..." -ForegroundColor Yellow
         Push-Location $projectRoot
+
         & npm install
-
-        Write-Host "Building TypeScript..." -ForegroundColor Yellow
-        & npm run build
-
-        $serverJs = Join-Path $projectRoot "dist" "server.js"
-        if (Test-Path $serverJs) {
-            Write-Host "✓ MCP server built successfully" -ForegroundColor Green
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Error installing Node.js dependencies" -ForegroundColor Red
+            Pop-Location
         } else {
-            Write-Host "Error building MCP server" -ForegroundColor Red
+            Write-Host "✓ Node.js dependencies installed" -ForegroundColor Green
+
+            Write-Host "Building TypeScript..." -ForegroundColor Yellow
+            & npm run build
+
+            $serverJs = Join-Path $projectRoot "dist" "server.js"
+            if (Test-Path $serverJs) {
+                Write-Host "✓ MCP server built successfully" -ForegroundColor Green
+            } else {
+                Write-Host "Error building MCP server" -ForegroundColor Red
+            }
+            Pop-Location
         }
-        Pop-Location
     }
 }
 
@@ -170,14 +199,15 @@ if ($response -match "^[Yy]") {
     $tenantId = Read-Host "Enter your TENANT_ID"
     $clientId = Read-Host "Enter your CLIENT_ID"
 
-    # Create config file
+    # Create config file (UTF-8 without BOM for JSON compatibility)
     $configPath = Join-Path $plannerCliDir "config.json"
     $config = @{
         tenant_id = $tenantId
         client_id = $clientId
     } | ConvertTo-Json
 
-    $config | Out-File -FilePath $configPath -Encoding UTF8
+    # Write without BOM (compatible with all PowerShell versions)
+    [System.IO.File]::WriteAllText($configPath, $config, [System.Text.UTF8Encoding]::new($false))
     Write-Host "✓ Configuration saved to $configPath" -ForegroundColor Green
 
     # Test authentication
@@ -226,4 +256,4 @@ Write-Host ""
 Write-Host "For help: python planner.py --help" -ForegroundColor White
 Write-Host "Documentation: Get-Content README.md" -ForegroundColor White
 Write-Host ""
-Write-Host "Happy planning! 🚀" -ForegroundColor Green
+Write-Host "Happy planning!" -ForegroundColor Green
