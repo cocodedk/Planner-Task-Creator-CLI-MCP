@@ -35,7 +35,7 @@ if (-not $pythonCmd) {
 }
 
 $pythonVersionOutput = & $pythonCmd --version 2>&1
-Write-Host "✓ $pythonVersionOutput found" -ForegroundColor Green
+Write-Host "[OK] $pythonVersionOutput found" -ForegroundColor Green
 
 # Validate Python version (3.8+)
 $versionMatch = [regex]::Match($pythonVersionOutput, "Python (\d+)\.(\d+)")
@@ -56,7 +56,7 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "Please reinstall Python and ensure pip is included" -ForegroundColor Red
     exit 1
 }
-Write-Host "✓ pip found" -ForegroundColor Green
+Write-Host "[OK] pip found" -ForegroundColor Green
 
 # Check Node.js (optional)
 Write-Host ""
@@ -64,19 +64,19 @@ Write-Host "Checking Node.js installation (for MCP server)..." -ForegroundColor 
 $installMcp = $false
 if (Test-Command "node") {
     $nodeVersion = & node --version 2>&1
-    Write-Host "✓ Node.js $nodeVersion found" -ForegroundColor Green
+    Write-Host "[OK] Node.js $nodeVersion found" -ForegroundColor Green
 
     # Also check for npm
     if (Test-Command "npm") {
         $npmVersion = & npm --version 2>&1
-        Write-Host "✓ npm $npmVersion found" -ForegroundColor Green
+        Write-Host "[OK] npm $npmVersion found" -ForegroundColor Green
         $installMcp = $true
     } else {
-        Write-Host "⚠ npm not found - MCP server will not be installed" -ForegroundColor Yellow
+        Write-Host "[WARN] npm not found - MCP server will not be installed" -ForegroundColor Yellow
         Write-Host "  npm should come with Node.js. Try reinstalling Node.js" -ForegroundColor Yellow
     }
 } else {
-    Write-Host "⚠ Node.js not found - MCP server will not be installed" -ForegroundColor Yellow
+    Write-Host "[WARN] Node.js not found - MCP server will not be installed" -ForegroundColor Yellow
     Write-Host "  Install from https://nodejs.org if you want MCP server support" -ForegroundColor Yellow
 }
 
@@ -87,7 +87,7 @@ $plannerCliDir = Join-Path $env:USERPROFILE ".planner-cli"
 if (-not (Test-Path $plannerCliDir)) {
     New-Item -ItemType Directory -Path $plannerCliDir -Force | Out-Null
 }
-Write-Host "✓ Directory created: $plannerCliDir" -ForegroundColor Green
+Write-Host "[OK] Directory created: $plannerCliDir" -ForegroundColor Green
 
 # Create virtual environment
 Write-Host ""
@@ -96,7 +96,7 @@ $venvPath = Join-Path $PSScriptRoot ".." "venv"
 $venvPath = [System.IO.Path]::GetFullPath($venvPath)
 
 if (Test-Path $venvPath) {
-    Write-Host "⚠ Virtual environment already exists, recreating..." -ForegroundColor Yellow
+    Write-Host "[WARN] Virtual environment already exists, recreating..." -ForegroundColor Yellow
     Remove-Item -Recurse -Force $venvPath
 }
 
@@ -105,7 +105,7 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "Error creating virtual environment" -ForegroundColor Red
     exit 1
 }
-Write-Host "✓ Virtual environment created at: $venvPath" -ForegroundColor Green
+Write-Host "[OK] Virtual environment created at: $venvPath" -ForegroundColor Green
 
 # Activate virtual environment and install dependencies
 Write-Host ""
@@ -131,7 +131,7 @@ if ($LASTEXITCODE -ne 0) {
     deactivate
     exit 1
 }
-Write-Host "✓ Python dependencies installed" -ForegroundColor Green
+Write-Host "[OK] Python dependencies installed" -ForegroundColor Green
 
 # Copy planner.py and planner_lib to .planner-cli
 Write-Host ""
@@ -150,7 +150,7 @@ if (Test-Path $plannerLibDest) {
 }
 Copy-Item -Path $plannerLib -Destination $plannerLibDest -Recurse
 
-Write-Host "✓ CLI installed to $plannerCliDir" -ForegroundColor Green
+Write-Host "[OK] CLI installed to $plannerCliDir" -ForegroundColor Green
 
 # Deactivate virtual environment
 deactivate
@@ -168,14 +168,14 @@ if ($installMcp) {
             Write-Host "Error installing Node.js dependencies" -ForegroundColor Red
             Pop-Location
         } else {
-            Write-Host "✓ Node.js dependencies installed" -ForegroundColor Green
+            Write-Host "[OK] Node.js dependencies installed" -ForegroundColor Green
 
             Write-Host "Building TypeScript..." -ForegroundColor Yellow
             & npm run build
 
             $serverJs = Join-Path $projectRoot "dist" "server.js"
             if (Test-Path $serverJs) {
-                Write-Host "✓ MCP server built successfully" -ForegroundColor Green
+                Write-Host "[OK] MCP server built successfully" -ForegroundColor Green
             } else {
                 Write-Host "Error building MCP server" -ForegroundColor Red
             }
@@ -208,7 +208,7 @@ if ($response -match "^[Yy]") {
 
     # Write without BOM (compatible with all PowerShell versions)
     [System.IO.File]::WriteAllText($configPath, $config, [System.Text.UTF8Encoding]::new($false))
-    Write-Host "✓ Configuration saved to $configPath" -ForegroundColor Green
+    Write-Host "[OK] Configuration saved to $configPath" -ForegroundColor Green
 
     # Test authentication
     Write-Host ""
