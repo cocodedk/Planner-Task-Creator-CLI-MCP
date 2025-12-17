@@ -92,7 +92,7 @@ Write-Host "[OK] Directory created: $plannerCliDir" -ForegroundColor Green
 # Create virtual environment
 Write-Host ""
 Write-Host "Setting up Python virtual environment..." -ForegroundColor Yellow
-$venvPath = Join-Path $PSScriptRoot ".." "venv"
+$venvPath = Join-Path (Join-Path $PSScriptRoot "..") "venv"
 $venvPath = [System.IO.Path]::GetFullPath($venvPath)
 
 if (Test-Path $venvPath) {
@@ -122,7 +122,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 # Install requirements
-$requirementsPath = Join-Path $PSScriptRoot ".." "requirements.txt"
+$requirementsPath = Join-Path (Join-Path $PSScriptRoot "..") "requirements.txt"
 $requirementsPath = [System.IO.Path]::GetFullPath($requirementsPath)
 & $pythonCmd -m pip install -r $requirementsPath
 
