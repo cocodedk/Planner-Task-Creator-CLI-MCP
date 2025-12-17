@@ -1,13 +1,13 @@
 # Scripts
 
-This directory contains shell scripts for setup, testing, and automation.
+This directory contains scripts for setup, testing, and automation.
 
 ## 📜 Available Scripts
 
 ### Installation & Setup
 
-#### `INSTALLATION.sh`
-Automated installation script for the complete project setup.
+#### `INSTALLATION.sh` (Linux/macOS)
+Automated installation script for the complete project setup on Unix-like systems.
 
 **Usage:**
 ```bash
@@ -22,6 +22,44 @@ Automated installation script for the complete project setup.
 - Installs Node.js dependencies
 - Builds TypeScript MCP server
 - Displays next steps
+
+---
+
+#### `INSTALLATION.ps1` (Windows PowerShell)
+Automated installation script for Windows using PowerShell.
+
+**Usage:**
+```powershell
+# You may need to allow script execution first:
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+
+# Run the installation
+.\scripts\INSTALLATION.ps1
+```
+
+**What it does:**
+- Checks Python 3.8+ installation
+- Checks Node.js 18+ installation (optional)
+- Creates Python virtual environment in project directory
+- Installs Python dependencies
+- Copies CLI to `%USERPROFILE%\.planner-cli`
+- Optionally installs and builds MCP server
+- Guides through Azure AD configuration
+
+---
+
+#### `INSTALLATION.bat` (Windows Command Prompt)
+Automated installation script for Windows using Command Prompt (batch file).
+
+**Usage:**
+```cmd
+scripts\INSTALLATION.bat
+```
+
+**What it does:**
+- Same functionality as the PowerShell version
+- Works without PowerShell execution policy changes
+- Compatible with older Windows systems
 
 ---
 
@@ -80,7 +118,7 @@ Tests the MCP server functionality.
 ## 🔧 Script Maintenance
 
 All scripts are designed to be:
-- **Executable:** Run `chmod +x scripts/*.sh` if needed
+- **Executable:** Run `chmod +x scripts/*.sh` if needed (Unix)
 - **Portable:** Work from project root directory
 - **Fail-safe:** Exit on errors with clear messages
 - **Colored output:** Use green/red/yellow for better readability
@@ -89,5 +127,18 @@ All scripts are designed to be:
 
 - Scripts should be run from the project root directory
 - Some scripts require configuration (see script comments)
-- All scripts use `/bin/bash` shebang
-- Scripts assume Unix-like environment (Linux/macOS)
+
+### Platform-Specific Notes
+
+**Linux/macOS:**
+- Shell scripts use `/bin/bash` shebang
+- Run `chmod +x scripts/*.sh` to make scripts executable
+
+**Windows:**
+- Use `INSTALLATION.ps1` for PowerShell (recommended)
+- Use `INSTALLATION.bat` for Command Prompt
+- You may need to set PowerShell execution policy:
+  ```powershell
+  Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+  ```
+- Virtual environment activation: `venv\Scripts\activate.bat` or `.\venv\Scripts\Activate.ps1`

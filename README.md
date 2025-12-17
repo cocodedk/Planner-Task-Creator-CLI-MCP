@@ -68,7 +68,47 @@ A command-line tool and MCP (Model Context Protocol) server for creating and man
 
 > **Note:** The Group permissions require admin consent. After adding them, click "Grant admin consent" in the Azure Portal to enable comment functionality.
 
-### Python CLI Setup
+### Quick Install (Automated)
+
+#### Linux/macOS
+
+```bash
+# Clone the repository
+git clone <repo-url>
+cd planner-task-creator-cli-mcp
+
+# Run the installation script
+./scripts/INSTALLATION.sh
+```
+
+#### Windows (PowerShell)
+
+```powershell
+# Clone the repository
+git clone <repo-url>
+cd planner-task-creator-cli-mcp
+
+# Allow script execution (if needed)
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+
+# Run the installation script
+.\scripts\INSTALLATION.ps1
+```
+
+#### Windows (Command Prompt)
+
+```cmd
+REM Clone the repository
+git clone <repo-url>
+cd planner-task-creator-cli-mcp
+
+REM Run the installation script
+scripts\INSTALLATION.bat
+```
+
+### Manual Install
+
+#### Python CLI Setup (Linux/macOS)
 
 ```bash
 # Clone the repository
@@ -87,7 +127,26 @@ cp planner.py ~/.planner-cli/
 ln -s ~/.planner-cli/planner.py /usr/local/bin/planner
 ```
 
-### MCP Server Setup
+#### Python CLI Setup (Windows)
+
+```powershell
+# Clone the repository
+git clone <repo-url>
+cd planner-task-creator-cli-mcp
+
+# Create and activate virtual environment
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Optional: Copy CLI to user directory
+mkdir "$env:USERPROFILE\.planner-cli" -Force
+Copy-Item planner.py "$env:USERPROFILE\.planner-cli\"
+```
+
+#### MCP Server Setup
 
 ```bash
 # Install Node dependencies
@@ -103,6 +162,7 @@ npm run build
 
 ### Environment Variables
 
+**Linux/macOS (bash):**
 ```bash
 export TENANT_ID="your-tenant-id"
 export CLIENT_ID="your-client-id"
@@ -111,9 +171,27 @@ export PLANNER_DEFAULT_BUCKET="To Do"
 export PLANNER_CONFIG_PATH="~/.planner-cli/config.json"  # Optional
 ```
 
+**Windows (PowerShell):**
+```powershell
+$env:TENANT_ID = "your-tenant-id"
+$env:CLIENT_ID = "your-client-id"
+$env:PLANNER_DEFAULT_PLAN = "My Plan"
+$env:PLANNER_DEFAULT_BUCKET = "To Do"
+```
+
+**Windows (Command Prompt):**
+```cmd
+set TENANT_ID=your-tenant-id
+set CLIENT_ID=your-client-id
+set PLANNER_DEFAULT_PLAN=My Plan
+set PLANNER_DEFAULT_BUCKET=To Do
+```
+
 ### Config File
 
-Create `~/.planner-cli/config.json`:
+Create config file at:
+- **Linux/macOS:** `~/.planner-cli/config.json`
+- **Windows:** `%USERPROFILE%\.planner-cli\config.json`
 
 ```json
 {
@@ -391,8 +469,10 @@ All errors are returned as structured JSON:
 
 ## Security
 
-- 🔐 Tokens are stored in `~/.planner-cli/msal_cache.bin` with 0600 permissions
-- 🔒 Config file permissions are set to 0600
+- 🔐 Tokens are stored securely:
+  - Linux/macOS: `~/.planner-cli/msal_cache.bin` with 0600 permissions
+  - Windows: `%USERPROFILE%\.planner-cli\msal_cache.bin`
+- 🔒 Config file permissions are set to 0600 (Unix) or user-only access (Windows)
 - 🚫 Tokens are never logged or exposed in output
 - ✅ OAuth device code flow for secure authentication
 
@@ -452,8 +532,10 @@ planner-task-creator-cli-mcp/
 │   ├── QUICKSTART.md      # Quick start guide
 │   ├── SETUP_GUIDE.md     # Complete setup
 │   └── *.md               # Other guides
-├── scripts/               # Shell scripts
-│   ├── INSTALLATION.sh    # Automated installer
+├── scripts/               # Installation & setup scripts
+│   ├── INSTALLATION.sh    # Automated installer (Linux/macOS)
+│   ├── INSTALLATION.ps1   # Automated installer (Windows PowerShell)
+│   ├── INSTALLATION.bat   # Automated installer (Windows CMD)
 │   ├── setup-cursor-mcp.sh # Cursor setup
 │   └── test-*.sh          # Test scripts
 ├── 0-docs/                # Implementation specs
