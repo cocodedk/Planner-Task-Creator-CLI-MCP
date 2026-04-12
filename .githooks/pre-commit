@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+SMOKE_CMD="npm run build && pytest"
+
+$SMOKE_CMD

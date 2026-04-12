@@ -73,7 +73,7 @@ where node >nul 2>&1
 if %ERRORLEVEL% equ 0 (
     for /f "tokens=*" %%i in ('node --version 2^>^&1') do set NODE_VERSION=%%i
     echo [OK] Node.js !NODE_VERSION! found
-    
+
     REM Also check for npm
     where npm >nul 2>&1
     if !ERRORLEVEL! equ 0 (
@@ -156,7 +156,7 @@ if "%INSTALL_MCP%"=="1" (
             popd
         ) else (
             echo [OK] Node.js dependencies installed
-            
+
             echo Building TypeScript...
             call npm run build
 

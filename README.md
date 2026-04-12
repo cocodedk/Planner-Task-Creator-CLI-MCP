@@ -2,8 +2,12 @@
 
 A command-line tool and MCP (Model Context Protocol) server for creating and managing Microsoft Planner tasks. This project provides both a standalone Python CLI and a Node.js MCP server wrapper for AI assistant integration.
 
-**Created by:** [Babak Bandpey](https://cocode.dk)
+**Created by:** [Babak Bandpey](https://linkedin.com/in/babakbandpey)
 **Website:** [cocode.dk](https://cocode.dk)
+
+## Website
+- [English](https://cocodedk.github.io/Planner-Task-Creator-CLI-MCP/)
+- [فارسی (Persian)](https://cocodedk.github.io/Planner-Task-Creator-CLI-MCP/fa/)
 
 ## Features
 
@@ -569,9 +573,11 @@ For issues and questions:
 
 ## Author
 
-**Babak Bandpey**
-- Website: [cocode.dk](https://cocode.dk)
-- Email: contact@cocode.dk
+**Babak Bandpey** — [cocode.dk](https://cocode.dk) | [LinkedIn](https://linkedin.com/in/babakbandpey) | [GitHub](https://github.com/cocodedk)
+
+## License
+
+Apache-2.0 | © 2026 [Cocode](https://cocode.dk) | Created by [Babak Bandpey](https://linkedin.com/in/babakbandpey)
 
 ## Acknowledgments
 
