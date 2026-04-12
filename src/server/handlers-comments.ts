@@ -39,3 +39,4 @@ export async function handleAddComment(args: {
   const result = await runCli(cliArgs);
   return parseCliOutput(result);
 }
+

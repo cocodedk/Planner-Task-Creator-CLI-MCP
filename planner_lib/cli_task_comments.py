@@ -109,3 +109,4 @@ def add_comment_cmd(app: typer.Typer):
             }
             print(json.dumps(error))
             raise typer.Exit(2)
+

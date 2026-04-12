@@ -1,0 +1,28 @@
+# Planner Task Creator CLI MCP
+
+> A command-line tool and MCP server for creating and managing Microsoft Planner tasks with AI assistant integration.
+
+## Overview
+
+Planner Task Creator CLI MCP provides:
+- A Python CLI for managing Microsoft Planner tasks
+- A TypeScript/Node.js MCP server for AI assistant integration
+- Microsoft Graph API integration with OAuth2 device code flow
+- Task creation, listing, updating, and comment management
+
+## Key Resources
+
+- [GitHub Repository](https://github.com/cocodedk/Planner-Task-Creator-CLI-MCP)
+- [Documentation](https://github.com/cocodedk/Planner-Task-Creator-CLI-MCP/tree/main/0-docs)
+
+## Tech Stack
+
+- Runtime: Node.js 20 (TypeScript), Python 3.12
+- API: Microsoft Graph API
+- Auth: MSAL (OAuth2 device code flow)
+- Testing: pytest (Python)
+- CLI: Typer + Rich
+
+## Author
+
+Babak Bandpey — https://cocode.dk — https://linkedin.com/in/babakbandpey
